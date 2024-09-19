@@ -7,10 +7,10 @@ class ParentNode(HTMLNode):
 
     def to_html(self):
         if self.tag is None or len(self.tag) == 0:
-            raise ValueError("Invalid ParentNode: parent node must have a tag")
+            raise ValueError("Invalid ParentNode: no tag")
 
         if self.children is None or len(self.children) == 0:
-            raise ValueError("Invalid ParentNode: parent node must have children")
+            raise ValueError("Invalid ParentNode: no children")
 
         html_str = ""
         for child in self.children:

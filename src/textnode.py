@@ -61,4 +61,4 @@ class TextNode:
                 tag="img", value="", props={"src": text_node.url, "alt": text_node.text}
             )
 
-        raise Exception("Invalid TextNode: invalid text node type")
+        raise Exception(f"Invalid text type: {text_node.text_type}")
