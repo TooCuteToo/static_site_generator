@@ -14,7 +14,7 @@ class TestHTMLNode(unittest.TestCase):
             },
         )
         self.assertEqual(
-            'href="https://www.google.com" target="_blank"', node.props_to_html()
+            ' href="https://www.google.com" target="_blank"', node.props_to_html()
         )
 
     def test_p_tag_props(self):
@@ -27,13 +27,22 @@ class TestHTMLNode(unittest.TestCase):
             },
         )
         self.assertEqual(
-            'custom_tag_1="Value of custom tag 1" custom_tag_2="Value of custom tag 2"',
+            ' custom_tag_1="Value of custom tag 1" custom_tag_2="Value of custom tag 2"',
             node.props_to_html(),
         )
 
     def test_repr(self):
         node = HTMLNode(tag="p", value="This is p html node", children=None, props=None)
         self.assertEqual("HTMLNode(p, This is p html node, None, None)", repr(node))
+
+    def test_none_props(self):
+        node = HTMLNode(
+            tag="p",
+        )
+
+        self.assertEqual(node.value, None)
+
+        self.assertEqual(node.props, None)
 
 
 if __name__ == "__main__":

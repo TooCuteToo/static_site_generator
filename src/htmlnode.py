@@ -14,9 +14,9 @@ class HTMLNode:
 
         props_str = ""
         for k, v in self.props.items():
-            props_str += f'{k}="{v}" '
+            props_str += f' {k}="{v}"'
 
-        return props_str.strip()
+        return props_str
 
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props})"
