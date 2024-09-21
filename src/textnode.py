@@ -14,6 +14,8 @@ class TextNode:
         text_type_bold: r"(\*\*[^*]*\*\*)",
         text_type_italic: r"(\*[^*]*\*)",
         text_type_code: r"(`[^`]*`)",
+        text_type_image: r"!\[(.*?)\]\((.*?)\)",
+        text_type_link: r"(?<!!)\[(.*?)\]\((.*?)\)",
     }
 
     def __init__(self, text, text_type, url=None):
@@ -76,3 +78,9 @@ class TextNode:
                     new_nodes.append(TextNode(text, node.text_type))
 
         return new_nodes
+
+    def extract_markdown_images(text):
+        return re.findall(TextNode.text_extract_pattern[TextNode.text_type_image], text)
+
+    def extract_markdown_link(text):
+        return re.findall(TextNode.text_extract_pattern[TextNode.text_type_link], text)
