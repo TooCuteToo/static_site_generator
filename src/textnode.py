@@ -72,6 +72,7 @@ class TextNode:
                     new_nodes.append(TextNode(text.replace(delimiter, ""), text_type))
                     continue
 
-                new_nodes.append(TextNode(text, node.text_type))
+                if len(text) > 0:
+                    new_nodes.append(TextNode(text, node.text_type))
 
         return new_nodes
