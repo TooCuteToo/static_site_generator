@@ -1,22 +1,20 @@
 from leafnode import LeafNode
+import re
 
 
 class TextNode:
-    # text_type_dict = {
-    #     "text_type_text": "text",
-    #     "text_type_bold": "bold",
-    #     "text_type_italic": "italic",
-    #     "text_type_code": "code",
-    #     "text_type_link": "link",
-    #     "text_type_image": "image",
-    # }
-
     text_type_text = "text"
     text_type_bold = "bold"
     text_type_italic = "italic"
     text_type_code = "code"
     text_type_link = "link"
     text_type_image = "image"
+
+    text_extract_pattern = {
+        text_type_bold: r"(\*\*[^*]*\*\*)",
+        text_type_italic: r"(\*[^*]*\*)",
+        text_type_code: r"(`[^`]*`)",
+    }
 
     def __init__(self, text, text_type, url=None):
         self.text = text
@@ -62,3 +60,18 @@ class TextNode:
             )
 
         raise Exception(f"Invalid text type: {text_node.text_type}")
+
+    def split_nodes_delimiter(old_nodes, delimiter, text_type):
+        new_nodes = []
+
+        for node in old_nodes:
+            texts = re.split(TextNode.text_extract_pattern[text_type], node.text)
+
+            for text in texts:
+                if delimiter in text:
+                    new_nodes.append(TextNode(text.replace(delimiter, ""), text_type))
+                    continue
+
+                new_nodes.append(TextNode(text, node.text_type))
+
+        return new_nodes
