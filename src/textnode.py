@@ -79,6 +79,88 @@ class TextNode:
 
         return new_nodes
 
+    def split_nodes_image(old_nodes):
+        new_nodes = []
+
+        for node in old_nodes:
+            images = TextNode.extract_markdown_images(node.text)
+
+            if len(images) == 0:
+                new_nodes.append(node)
+                continue
+
+            sections = ""
+
+            for image in images:
+                if len(sections) == 0:
+                    sections = node.text.split(f"![{image[0]}]({image[1]})", 1)
+                else:
+                    sections = sections[-1].split(f"![{image[0]}]({image[1]})", 1)
+
+                new_nodes.extend(
+                    [
+                        TextNode(
+                            text=sections[0],
+                            url=None,
+                            text_type=TextNode.text_type_text,
+                        ),
+                        TextNode(
+                            text=image[0],
+                            url=image[1],
+                            text_type=TextNode.text_type_image,
+                        ),
+                    ]
+                )
+
+            if len(sections) > 0 and sections[-1] != "":
+                new_nodes.append(
+                    TextNode(
+                        text=sections[-1], url=None, text_type=TextNode.text_type_text
+                    )
+                )
+
+        return new_nodes
+
+    def split_nodes_link(old_nodes):
+        new_nodes = []
+
+        for node in old_nodes:
+            links = TextNode.extract_markdown_link(node.text)
+
+            if len(links) == 0:
+                new_nodes.append(node)
+                continue
+
+            sections = ""
+
+            for link in links:
+                if len(sections) == 0:
+                    sections = node.text.split(f"[{link[0]}]({link[1]})", 1)
+                else:
+                    sections = sections[-1].split(f"[{link[0]}]({link[1]})", 1)
+
+                new_nodes.extend(
+                    [
+                        TextNode(
+                            text=sections[0],
+                            url=None,
+                            text_type=TextNode.text_type_text,
+                        ),
+                        TextNode(
+                            text=link[0], url=link[1], text_type=TextNode.text_type_link
+                        ),
+                    ]
+                )
+
+            if len(sections) > 0 and sections[-1] != "":
+                new_nodes.append(
+                    TextNode(
+                        text=sections[-1], url=None, text_type=TextNode.text_type_text
+                    )
+                )
+
+        return new_nodes
+
     def extract_markdown_images(text):
         return re.findall(TextNode.text_extract_pattern[TextNode.text_type_image], text)
 
