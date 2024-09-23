@@ -38,6 +38,22 @@ class TextNode:
     def __repr__(self):
         return f"TextNode({self.text}, {self.text_type}, {self.url})"
 
+    def text_to_textnodes(text):
+        old_nodes = [TextNode(text=text, text_type=TextNode.text_type_text, url=None)]
+        link_nodes = TextNode.split_nodes_link(old_nodes)
+        image_nodes = TextNode.split_nodes_image(link_nodes)
+        bold_nodes = TextNode.split_nodes_delimiter(
+            image_nodes, "**", TextNode.text_type_bold
+        )
+        italic_nodes = TextNode.split_nodes_delimiter(
+            bold_nodes, "*", TextNode.text_type_italic
+        )
+        code_nodes = TextNode.split_nodes_delimiter(
+            italic_nodes, "`", TextNode.text_type_code
+        )
+
+        return code_nodes
+
     def text_node_to_html_node(text_node):
         if text_node.text_type == TextNode.text_type_text:
             return LeafNode(tag=None, value=text_node.text)
@@ -75,7 +91,7 @@ class TextNode:
                     continue
 
                 if len(text) > 0:
-                    new_nodes.append(TextNode(text, node.text_type))
+                    new_nodes.append(TextNode(text, node.text_type, url=node.url))
 
         return new_nodes
 
@@ -89,13 +105,15 @@ class TextNode:
                 new_nodes.append(node)
                 continue
 
-            sections = ""
+            original_text = node.text
 
             for image in images:
-                if len(sections) == 0:
-                    sections = node.text.split(f"![{image[0]}]({image[1]})", 1)
-                else:
-                    sections = sections[-1].split(f"![{image[0]}]({image[1]})", 1)
+                sections = original_text.split(f"![{image[0]}]({image[1]})", 1)
+
+                # if len(sections) == 0:
+                #     sections = node.text.split(f"![{image[0]}]({image[1]})", 1)
+                # else:
+                #     sections = sections[-1].split(f"![{image[0]}]({image[1]})", 1)
 
                 new_nodes.extend(
                     [
@@ -112,10 +130,12 @@ class TextNode:
                     ]
                 )
 
-            if len(sections) > 0 and sections[-1] != "":
+                original_text = sections[1]
+
+            if original_text != "":
                 new_nodes.append(
                     TextNode(
-                        text=sections[-1], url=None, text_type=TextNode.text_type_text
+                        text=original_text, url=None, text_type=TextNode.text_type_text
                     )
                 )
 
@@ -131,13 +151,10 @@ class TextNode:
                 new_nodes.append(node)
                 continue
 
-            sections = ""
+            original_text = node.text
 
             for link in links:
-                if len(sections) == 0:
-                    sections = node.text.split(f"[{link[0]}]({link[1]})", 1)
-                else:
-                    sections = sections[-1].split(f"[{link[0]}]({link[1]})", 1)
+                sections = original_text.split(f"[{link[0]}]({link[1]})", 1)
 
                 new_nodes.extend(
                     [
@@ -152,10 +169,12 @@ class TextNode:
                     ]
                 )
 
-            if len(sections) > 0 and sections[-1] != "":
+                original_text = sections[1]
+
+            if original_text != "":
                 new_nodes.append(
                     TextNode(
-                        text=sections[-1], url=None, text_type=TextNode.text_type_text
+                        text=original_text, url=None, text_type=TextNode.text_type_text
                     )
                 )
 
