@@ -1,4 +1,4 @@
-from htmlnode import *
+from htmlnode import HTMLNode
 
 
 class LeafNode(HTMLNode):

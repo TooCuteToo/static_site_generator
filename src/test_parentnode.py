@@ -32,17 +32,6 @@ class TestParentNode(unittest.TestCase):
             node.to_html,
         )
 
-    def test_children_node_is_0(self):
-        node = ParentNode(
-            "p",
-            children=[],
-        )
-
-        self.assertRaises(
-            ValueError,
-            node.to_html,
-        )
-
     def test_parent_node_tag_none(self):
         node = ParentNode(
             None,

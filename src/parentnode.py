@@ -1,4 +1,4 @@
-from htmlnode import *
+from htmlnode import HTMLNode
 
 
 class ParentNode(HTMLNode):
@@ -9,7 +9,7 @@ class ParentNode(HTMLNode):
         if self.tag is None or len(self.tag) == 0:
             raise ValueError("Invalid ParentNode: no tag")
 
-        if self.children is None or len(self.children) == 0:
+        if self.children is None:
             raise ValueError("Invalid ParentNode: no children")
 
         html_str = ""

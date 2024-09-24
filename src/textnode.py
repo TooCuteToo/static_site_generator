@@ -72,7 +72,7 @@ class TextNode:
                 tag="a", value=text_node.text, props={"href": text_node.url}
             )
 
-        if text_node.text_type == TextNode.text_type_link:
+        if text_node.text_type == TextNode.text_type_image:
             return LeafNode(
                 tag="img", value="", props={"src": text_node.url, "alt": text_node.text}
             )
