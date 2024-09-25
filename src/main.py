@@ -6,9 +6,10 @@ import os
 def main():
     clean_up_dir("public")
     copy_file_to_dest("static", "public")
-    Helper.generate_page(
-        "content/index.md", "static/template.html", "public/index.html"
-    )
+    Helper.generate_pages_recursive("content", "template.html", "public")
+    # Helper.generate_page(
+    #     "content/index.md", "static/template.html", "public/index.html"
+    # )
 
 
 def clean_up_dir(path):
@@ -39,10 +40,7 @@ def copy_file_to_dest(source_path, dest_path):
                 print(f"creating dest path: {d}")
                 os.mkdir(d)
 
-            copy_file_to_dest(s, d)
-
-        else:
-            copy_file_to_dest(s, d)
+        copy_file_to_dest(s, d)
 
 
 if __name__ == "__main__":

@@ -2,6 +2,8 @@ from block_markdown import BlockMarkdown
 from leafnode import LeafNode
 from parentnode import ParentNode
 from textnode import TextNode
+import os
+import shutil
 
 
 class Helper:
@@ -11,6 +13,28 @@ class Helper:
 
         end_index = markdown.index("\n")
         return markdown[2:end_index].strip()
+
+    def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+        if os.path.isfile(dir_path_content):
+            print(f"generate content for file: {dir_path_content}")
+            Helper.generate_page(dir_path_content, template_path, dest_dir_path)
+            return
+
+        list_dir = os.listdir(dir_path_content)
+
+        for dir in list_dir:
+            s = os.path.join(dir_path_content, dir)
+            d = os.path.join(dest_dir_path, dir)
+
+            print(f"source content file path: {s}")
+            print(f"dest content file path: {d}")
+
+            if os.path.isdir(s):
+                if not os.path.exists(d):
+                    print(f"creating dest content file path: {d}")
+                    os.mkdir(d)
+
+            Helper.generate_pages_recursive(s, template_path, d)
 
     def generate_page(from_path, template_path, dest_path):
         print(f"Generating page from {from_path} to {dest_path} using {template_path}")
@@ -32,7 +56,7 @@ class Helper:
         template_content = template_content.replace("{{ Title }}", title)
         template_content = template_content.replace("{{ Content }}", html_string)
 
-        output = open(dest_path, "w")
+        output = open(dest_path.replace(".md", ".html"), "w")
         output.write(template_content)
         output.close()
 
