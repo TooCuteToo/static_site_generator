@@ -5,6 +5,37 @@ from textnode import TextNode
 
 
 class Helper:
+    def extract_title(markdown):
+        if not markdown.startswith("# ") or len(markdown) <= 2:
+            raise ValueError("Invalid Markdow: no # heading in the file")
+
+        end_index = markdown.index("\n")
+        return markdown[2:end_index].strip()
+
+    def generate_page(from_path, template_path, dest_path):
+        print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+
+        mf = open(from_path, "r")
+        markdown_content = mf.read()
+        mf.close()
+
+        tf = open(template_path, "r")
+        template_content = tf.read()
+        tf.close()
+
+        html_node = Helper.markdown_to_html_node(markdown_content)
+        html_string = html_node.to_html()
+
+        title = Helper.extract_title(markdown_content)
+        print(f"Extract title: {title}")
+
+        template_content = template_content.replace("{{ Title }}", title)
+        template_content = template_content.replace("{{ Content }}", html_string)
+
+        output = open(dest_path, "w")
+        output.write(template_content)
+        output.close()
+
     def markdown_to_html_node(markdown):
         blocks = BlockMarkdown.markdown_to_block(markdown)
 

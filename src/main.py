@@ -6,6 +6,9 @@ import os
 def main():
     clean_up_dir("public")
     copy_file_to_dest("static", "public")
+    Helper.generate_page(
+        "content/index.md", "static/template.html", "public/index.html"
+    )
 
 
 def clean_up_dir(path):
@@ -15,6 +18,7 @@ def clean_up_dir(path):
 
     print(f"cleaning up the dir: {path}")
     shutil.rmtree(path)
+    os.mkdir(path)
 
 
 def copy_file_to_dest(source_path, dest_path):
